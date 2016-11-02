@@ -16,5 +16,15 @@ class App < Sinatra::Base
     end
   end
 
+  delete "/user/:id" do
+    user = User.find_by(id: params["id"])
+    if user
+      user.delete
+    else
+      status 404
+      {message: "User with id ##{params["id"]} does not exist"}.to_json
+    end
+
+  end
 
 end

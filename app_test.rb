@@ -39,4 +39,16 @@ class AppTest < Minitest::Test
     assert_equal "Username can't be blank", JSON.parse(last_response.body)['errors']['full_messages'][0]
   end
 
+  def test_can_delete_user
+    delete "/user/#{User.last.id}"
+    assert_equal 4, User.all.count
+    refute User.find_by(id: 5)
+  end
+
+  def test_404_for_user_not_in_database
+    delete "/user/#{User.last.id + 1}"
+    assert_equal 404, last_response.status
+    assert_equal "User with id ##{User.last.id + 1} does not exist", JSON.parse(last_response.body)["message"]
+  end
+
 end
