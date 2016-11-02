@@ -3,8 +3,8 @@ require_relative "./app_dependencies"
 class App < Sinatra::Base
 
   post "/users" do
-    request_body = request.body.read
     content_type("application/json")
+    request_body = request.body.read
     user_info = JSON.parse(request_body)
     user = User.new(user_info)
     if user.save
