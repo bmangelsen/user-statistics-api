@@ -29,19 +29,14 @@ class AppTest < Minitest::Test
     post "/user", payload.to_json
     assert_equal 201, last_response.status
     assert_equal User.last.id, JSON.parse(last_response.body)["id"]
-    binding.pry
   end
 
-  # def test_can_delete_user
-  #
-  # end
-  #
-  # def can_show_all_users
-  #
-  # end
-  #
-  # def can_show_who_logged_on_recently
-  #
-  # end
+  def test_422_response_and_error_message_when_user_fails_to_save
+    header "content_type", "application/json"
+    payload = {last_logged_on: Date.new(2016/10/15), joined_on: Date.new(2016/05/20), total_site_visits: 57}
+    post "/user", payload.to_json
+    assert_equal 422, last_response.status
+    assert_equal "Username can't be blank", JSON.parse(last_response.body)['errors']['full_messages'][0]
+  end
 
 end

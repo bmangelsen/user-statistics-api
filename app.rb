@@ -12,7 +12,7 @@ class App < Sinatra::Base
       user.to_json
     else
       status 422
-      {errors: {message: user.errors.messages}}.to_json
+      {errors: {full_messages: user.errors.full_messages}}.to_json
     end
   end
 
