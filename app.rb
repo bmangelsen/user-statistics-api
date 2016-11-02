@@ -2,7 +2,7 @@ require_relative "./app_dependencies"
 
 class App < Sinatra::Base
 
-  post "/user" do
+  post "/users" do
     request_body = request.body.read
     content_type("application/json")
     user_info = JSON.parse(request_body)
@@ -16,7 +16,7 @@ class App < Sinatra::Base
     end
   end
 
-  delete "/user/:id" do
+  delete "/users/:id" do
     user = User.find_by(id: params["id"])
     if user
       user.delete
@@ -24,7 +24,10 @@ class App < Sinatra::Base
       status 404
       {message: "User with id ##{params["id"]} does not exist"}.to_json
     end
+  end
 
+  get "/visits" do
+    User.all.sum("total_site_visits").to_json
   end
 
 end

@@ -26,7 +26,7 @@ class AppTest < Minitest::Test
   def test_can_create_user
     header "content_type", "application/json"
     payload = {username: "Bob", last_logged_on: Date.new(2016/10/15), joined_on: Date.new(2016/05/20), total_site_visits: 57}
-    post "/user", payload.to_json
+    post "/users", payload.to_json
     assert_equal 201, last_response.status
     assert_equal User.last.id, JSON.parse(last_response.body)["id"]
   end
@@ -34,21 +34,27 @@ class AppTest < Minitest::Test
   def test_422_response_and_error_message_when_user_fails_to_save
     header "content_type", "application/json"
     payload = {last_logged_on: Date.new(2016/10/15), joined_on: Date.new(2016/05/20), total_site_visits: 57}
-    post "/user", payload.to_json
+    post "/users", payload.to_json
     assert_equal 422, last_response.status
     assert_equal "Username can't be blank", JSON.parse(last_response.body)['errors']['full_messages'][0]
   end
 
   def test_can_delete_user
-    delete "/user/#{User.last.id}"
+    delete "/users/#{User.last.id}"
     assert_equal 4, User.all.count
     refute User.find_by(id: 5)
   end
 
   def test_404_for_user_not_in_database
-    delete "/user/#{User.last.id + 1}"
+    delete "/users/#{User.last.id + 1}"
     assert_equal 404, last_response.status
     assert_equal "User with id ##{User.last.id + 1} does not exist", JSON.parse(last_response.body)["message"]
+  end
+
+  def test_get_total_site_visits
+    get "/visits"
+    assert last_response.ok?
+    assert_equal 181, last_response.body.to_i
   end
 
 end
