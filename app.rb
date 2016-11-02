@@ -27,7 +27,18 @@ class App < Sinatra::Base
   end
 
   get "/visits" do
+    content_type("application/json")
     User.all.sum("total_site_visits").to_json
+  end
+
+  get "/users" do
+    content_type("application/json")
+    User.all.to_json
+  end
+
+  get "/users/most_recent" do
+    content_type("application/json")
+    {last_date: User.maximum("last_logged_on")}.to_json
   end
 
 end
