@@ -2,12 +2,7 @@ require 'minitest/autorun'
 require 'minitest/pride'
 require './user'
 require './migration'
-
-ActiveRecord::Base.establish_connection(
-  adapter: 'sqlite3',
-  database: 'test.sqlite3'
-)
-ActiveRecord::Migration.verbose = false
+require './db_connection'
 
 class UserTest < Minitest::Test
 
