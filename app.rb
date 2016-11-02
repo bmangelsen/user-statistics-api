@@ -41,4 +41,9 @@ class App < Sinatra::Base
     {last_date: User.maximum("last_logged_on")}.to_json
   end
 
+  get "/users/joined_earliest" do
+    content_type("application/json")
+    {first_date: User.minimum("joined_on")}.to_json
+  end
+
 end

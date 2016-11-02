@@ -16,7 +16,7 @@ class AppTest < Minitest::Test
     begin UserMigration.migrate(:down);
     rescue; end
     UserMigration.migrate(:up)
-    User.create!(username: "Ben", last_logged_on: Date.new(2016,10,31), joined_on: Date.new(2016,01,25), total_site_visits: 17)
+    User.create!(username: "Ben", last_logged_on: Date.new(2016,10,31), joined_on: Date.new(2016,04,25), total_site_visits: 17)
     User.create!(username: "Farimah", last_logged_on: Date.new(2016,10,28), joined_on: Date.new(2016,02,17), total_site_visits: 7)
     User.create!(username: "Allie", last_logged_on: Date.new(2016,10,05), joined_on: Date.new(2016,05,16), total_site_visits: 34)
     User.create!(username: "Alex", last_logged_on: Date.new(2016,10,15), joined_on: Date.new(2016,03,8), total_site_visits: 20)
@@ -69,6 +69,12 @@ class AppTest < Minitest::Test
     get "/users/most_recent"
     assert last_response.ok?
     assert_equal "Ben", User.find_by(last_logged_on: JSON.parse(last_response.body)["last_date"]).username
+  end
+
+  def test_get_user_who_joined_earliest
+    get "/users/joined_earliest"
+    assert last_response.ok?
+    assert_equal "Farimah", User.find_by(joined_on: JSON.parse(last_response.body)["first_date"]).username
   end
 
 end
